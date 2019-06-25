@@ -7,18 +7,18 @@
 
 int main() {
 
-    std::function<double(double)> sigmoid = [](auto x){
+    auto sigmoid = [](auto x){
         return 1.0/(1.0 + std::exp(-x));
     };
-    std::function<double(double)> sigmoid_diff = [](auto x) {
+    auto sigmoid_diff = [](auto x) {
         return std::exp(-x)/std::pow(1+std::exp(-x), 2);
     };
 
-    std::vector<std::array<double,2>> inputValues = {{{0,0}, {0,1}, {1,0}, {1,1}}};
-    std::vector<std::array<double,2>> outputValues = {{{0,0}, {0,1}, {0,1}, {1,0}}};
+
+    std::vector<std::array<double,2>> inputValues{{0,0}, {0,1}, {1,0}, {1,1}};
+    std::vector<std::array<double,2>> outputValues{{0,0}, {0,1}, {0,1}, {1,0}};
 
     Mlp<2,100,100,2> mlp(sigmoid, sigmoid_diff, 0.01);
-
 
     std::cout << mlp.train(inputValues, outputValues, 0.001) << std::endl;
 
