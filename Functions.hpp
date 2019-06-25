@@ -40,6 +40,14 @@ namespace ml::functions {
     auto softplusDiff(double x) -> double {
         return std::exp(x) / (std::exp(x) + 1);
     }
+
+    auto identity(double x) -> double {
+        return x;
+    }
+
+    auto identityDiff(double) -> double {
+        return 1;
+    }
 }
 
 #endif
