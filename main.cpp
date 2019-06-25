@@ -1,24 +1,15 @@
 #include <iostream>
-#include <limits>
-#include <cmath>
 #include "Layer.hpp"
 #include "Mlp.hpp"
-
+#include "Functions.hpp"
 
 int main() {
-
-    auto sigmoid = [](auto x){
-        return 1.0/(1.0 + std::exp(-x));
-    };
-    auto sigmoid_diff = [](auto x) {
-        return std::exp(-x)/std::pow(1+std::exp(-x), 2);
-    };
-
-
     std::vector<std::array<double,2>> inputValues{{0,0}, {0,1}, {1,0}, {1,1}};
     std::vector<std::array<double,2>> outputValues{{0,0}, {0,1}, {0,1}, {1,0}};
 
-    Mlp<2,100,100,2> mlp(sigmoid, sigmoid_diff, 0.01);
+    Mlp<2,100,100,2> mlp{ml::functions::sigmoid,
+            ml::functions::sigmoidDiff,
+            ml::functions::meanSquareError<2>, 0.01};
 
     std::cout << mlp.train(inputValues, outputValues, 0.001) << std::endl;
 

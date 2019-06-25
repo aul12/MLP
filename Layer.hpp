@@ -26,7 +26,7 @@ public:
     }
 
     auto propagate(const std::array<double, InputSize> &inputVec,
-                   const std::function<double(double)> &activationFunction = [](auto x){ return x;}) {
+                   const std::function<double(double)> &activationFunction) {
         for(auto o = 0; o < OutputSize; o++) {
             lastDendriticPotential[o] = 0;
             for(auto i = 0; i < InputSize; i++) {
@@ -39,7 +39,7 @@ public:
     }
 
     auto backPropagate(const std::array<double, OutputSize> &errorVec,
-                       const std::function<double(double)> &transDiff = [](auto c){ return 1;}) {
+                       const std::function<double(double)> &transDiff) {
         std::array<double, InputSize> errorInPrevLayer;
         for(auto i = 0; i < InputSize; i++) {
             errorInPrevLayer[i] = 0;
