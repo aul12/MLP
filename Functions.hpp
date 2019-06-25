@@ -24,6 +24,22 @@ namespace ml::functions {
     auto sigmoidDiff(double x) -> double {
         return std::exp(-x)/std::pow(1+std::exp(-x), 2);
     }
+
+    auto relu(double x) -> double  {
+        return x > 0 ? x : 0;
+    }
+
+    auto reluDiff(double x) -> double {
+        return x > 0 ? 1 : 0;
+    }
+
+    auto softplus(double x) -> double {
+        return std::log(1 + std::exp(x));
+    }
+
+    auto softplusDiff(double x) -> double {
+        return std::exp(x) / (std::exp(x) + 1);
+    }
 }
 
 #endif
