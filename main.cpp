@@ -7,7 +7,7 @@ int main() {
     std::vector<std::array<double,2>> inputValues{{0,0}, {0,1}, {1,0}, {1,1}};
     std::vector<std::array<double,2>> outputValues{{0,0}, {0,1}, {0,1}, {1,0}};
 
-    Mlp<2,5,5,2> mlp{ml::functions::relu,
+    ml::Mlp<2,5,5,2> mlp{ml::functions::relu,
             ml::functions::reluDiff,
             ml::functions::meanSquareError<2>, 0.01};
 

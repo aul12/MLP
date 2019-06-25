@@ -30,7 +30,7 @@ namespace ml {
     template<int INPUT, int OUTPUT, int ... FOLLOWING_NEURONS>
     class Mlp {
     public:
-        static constexpr auto LAST_OUTPUT = getLast<FOLLOWING_NEURONS...>::val;
+        static constexpr auto LAST_OUTPUT = helper::getLast<FOLLOWING_NEURONS...>::val;
         using TransferF = std::function<double(double)>;
         using CostF = std::function<double(std::array<double, LAST_OUTPUT>, std::array<double, LAST_OUTPUT>)>;
 
