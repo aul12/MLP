@@ -42,7 +42,8 @@ public:
     }
 
     auto train(const std::vector<std::array<double, INPUT>> &inputs,
-               const std::vector<std::array<double, LAST_OUTPUT>> &outputs, double maxError) {
+               const std::vector<std::array<double, LAST_OUTPUT>> &outputs, double maxError,
+               const std::optional<std::function<void(double)>> &errorCallback = std::nullopt) {
         assert(inputs.size() == outputs.size());
         auto error = std::numeric_limits<double>::max();
         while (error > maxError) {
@@ -55,6 +56,10 @@ public:
                 auto mlpOutput = forward(inputs[c]);
 
                 error += costF(mlpOutput, outputs[c]);
+            }
+
+            if (errorCallback.has_value()) {
+                errorCallback.value()(error);
             }
         }
         return error;
