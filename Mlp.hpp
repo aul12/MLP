@@ -28,27 +28,27 @@ template<int INPUT, int OUTPUT, int ... FOLLOWING_NEURONS>
 class Mlp {
 public:
     Mlp(const std::function<double(double)> &transfer,
-            const std::function<double(double)> &transferDiff, const double learnRate)
-            : learnRate(learnRate), followingMlp(transfer, transferDiff, learnRate),
-                transfer(transfer), transferDiff(transferDiff), layer(){};
+            const std::function<double(double)> &transferDiff, double learnRate)
+            :  followingMlp(transfer, transferDiff, learnRate), layer{},
+                transfer(transfer), transferDiff(transferDiff), learnRate(learnRate) {};
 
-    auto forward(std::array<double, INPUT> x) -> std::array<double, getLast<FOLLOWING_NEURONS...>::val> {
+    auto forward(const std::array<double, INPUT> &x) -> std::array<double, getLast<FOLLOWING_NEURONS...>::val> {
         return followingMlp.forward(layer.propagate(x,transfer));
     }
 
-    auto train(std::vector<std::array<double, INPUT>> inputs,
-               std::vector<std::array<double,getLast<FOLLOWING_NEURONS...>::val>> outputs, double maxError) {
+    auto train(const std::vector<std::array<double, INPUT>> &inputs,
+               const std::vector<std::array<double,getLast<FOLLOWING_NEURONS...>::val>> &outputs, double maxError) {
         assert(inputs.size() == outputs.size());
         auto error = std::numeric_limits<double>::max();
         while (error > maxError) {
-            for (auto c = 0; c < inputs.size(); c++) {
+            for (std::size_t c = 0; c < inputs.size(); c++) {
                 adapt(inputs[c], outputs[c]);
             }
 
             error = 0.0;
-            for (auto c = 0; c < inputs.size(); c++) {
+            for (std::size_t c = 0; c < inputs.size(); c++) {
                 auto mlpOutput = forward(inputs[c]);
-                for(auto i = 0; i<getLast<FOLLOWING_NEURONS...>::val; i++) {
+                for(std::size_t i = 0; i<getLast<FOLLOWING_NEURONS...>::val; i++) {
                     error += std::pow(mlpOutput[i] - outputs[c][i],2);
                 }
             }
@@ -56,7 +56,7 @@ public:
         return error;
     }
 
-    auto adapt(std::array<double,INPUT> input, std::array<double, getLast<FOLLOWING_NEURONS...>::val> trainerOutput) -> std::array<double, INPUT> {
+    auto adapt(const std::array<double,INPUT> &input, const std::array<double, getLast<FOLLOWING_NEURONS...>::val> &trainerOutput) -> std::array<double, INPUT> {
         auto output = layer.propagate(input,transfer);
         auto outputError = followingMlp.adapt(output, trainerOutput);
         auto inputError = layer.backPropagate(outputError,transferDiff);
@@ -76,9 +76,8 @@ template<int INPUT, int OUTPUT>
 class Mlp<INPUT,OUTPUT> {
 public:
     Mlp(const std::function<double(double)> &transfer,
-                 const std::function<double(double)> &transferDiff, const double learnRate)
-            : learnRate(learnRate),
-              transfer(transfer), transferDiff(transferDiff){};
+            const std::function<double(double)> &transferDiff, double learnRate)
+            :  layer{}, transfer(transfer), transferDiff(transferDiff), learnRate(learnRate) {};
 
     std::array<double, OUTPUT> forward(std::array<double, INPUT> x) {
         return layer.propagate(x, transfer);

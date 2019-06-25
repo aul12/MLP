@@ -25,8 +25,8 @@ public:
         }
     }
 
-    auto propagate(std::array<double, InputSize> inputVec,
-                   std::function<double(double)> activationFunction = [](auto x){ return x;}) {
+    auto propagate(const std::array<double, InputSize> &inputVec,
+                   const std::function<double(double)> &activationFunction = [](auto x){ return x;}) {
         for(auto o = 0; o < OutputSize; o++) {
             lastDendriticPotential[o] = 0;
             for(auto i = 0; i < InputSize; i++) {
@@ -38,8 +38,8 @@ public:
         return lastOutput;
     }
 
-    auto backPropagate(std::array<double, OutputSize> errorVec,
-                       std::function<double(double)> transDiff = [](auto c){ return 1;}) {
+    auto backPropagate(const std::array<double, OutputSize> &errorVec,
+                       const std::function<double(double)> &transDiff = [](auto c){ return 1;}) {
         std::array<double, InputSize> errorInPrevLayer;
         for(auto i = 0; i < InputSize; i++) {
             errorInPrevLayer[i] = 0;
@@ -50,8 +50,8 @@ public:
         return errorInPrevLayer;
     }
 
-    auto adaptWeights(std::array<double, OutputSize> errorVec,
-                      std::array<double,InputSize> input, double learnRate) {
+    auto adaptWeights(const std::array<double, OutputSize> &errorVec,
+                      const std::array<double,InputSize> &input, double learnRate) {
         for(auto o = 0; o < OutputSize; o++) {
             for(auto i = 0; i < InputSize; i++) {
                 weights[o][i] += errorVec[o] * learnRate * input[i];

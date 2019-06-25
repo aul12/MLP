@@ -24,7 +24,6 @@ int main() {
 
     for(auto s=0; s<4; s++) {
         const auto &inputVec = inputValues[s];
-        const auto &trainerOutput = outputValues[s];
         const auto out = mlp.forward(inputVec);
         std::cout << "[" << inputVec[0] << ", " << inputVec[1] << "] -> [" << out[0] << "," << out[1] << "]" << std::endl;
     }
