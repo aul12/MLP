@@ -38,7 +38,8 @@ public:
                 transfer(transfer), transferDiff(transferDiff), costF{costF}, learnRate(learnRate) {};
 
     auto forward(const std::array<double, INPUT> &x) -> std::array<double, LAST_OUTPUT> {
-        return followingMlp.forward(layer.propagate(x,transfer));
+        auto thisLayerResult = layer.propagate(x, transfer);
+        return followingMlp.forward(thisLayerResult);
     }
 
     auto train(const std::vector<std::array<double, INPUT>> &inputs,

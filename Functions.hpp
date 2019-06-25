@@ -22,7 +22,9 @@ namespace ml::functions {
     }
 
     auto sigmoidDiff(double x) -> double {
-        return std::exp(-x)/std::pow(1+std::exp(-x), 2);
+        auto exp = std::exp(-x);
+        auto expInc = exp + 1;
+        return exp/(expInc * expInc);
     }
 
     auto relu(double x) -> double  {
