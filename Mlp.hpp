@@ -56,8 +56,8 @@ namespace ml {
                    const CostF &costF, double learnRate,
                    const std::optional<std::function<void(double)>> &errorCallback = std::nullopt) {
             assert(inputs.size() == outputs.size());
-            auto error = std::numeric_limits<double>::max();
-            while (error > maxError) {
+            double error;
+            do {
                 for (std::size_t c = 0; c < inputs.size(); c++) {
                     adapt(inputs[c], outputs[c], learnRate);
                 }
@@ -72,7 +72,8 @@ namespace ml {
                 if (errorCallback.has_value()) {
                     errorCallback.value()(error);
                 }
-            }
+            } while (error > maxError);
+
             return error;
         }
 
