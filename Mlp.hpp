@@ -27,10 +27,10 @@ namespace ml {
         };
     }
 
-    template<int INPUT, int OUTPUT, int ... FOLLOWING_NEURONS>
+    template<int INPUT, int OUTPUT, int ... FOLLOWING_LAYERS>
     class Mlp {
     public:
-        static constexpr auto LAST_OUTPUT = helper::getLast<FOLLOWING_NEURONS...>::val;
+        static constexpr auto LAST_OUTPUT = helper::getLast<FOLLOWING_LAYERS...>::val;
         using TransferF = std::function<double(double)>;
         using CostF = std::function<double(std::array<double, LAST_OUTPUT>, std::array<double, LAST_OUTPUT>)>;
 
@@ -78,12 +78,29 @@ namespace ml {
         }
 
     private:
-        Mlp<OUTPUT, FOLLOWING_NEURONS...> followingMlp;
+        Mlp<OUTPUT, FOLLOWING_LAYERS...> followingMlp;
         Layer <INPUT, OUTPUT> layer;
         const TransferF transfer;
         const TransferF transferDiff;
         const CostF costF;
         const double learnRate;
+
+    public:
+        friend void to_json(nlohmann::json& j, const Mlp<INPUT, OUTPUT, FOLLOWING_LAYERS...> &mlp) {
+            j["layers"].emplace_back(mlp.layer);
+        }
+
+        friend void from_json(const nlohmann::json& j, Mlp<INPUT, OUTPUT, FOLLOWING_LAYERS...> &mlp) {
+            assert(!j["layers"].empty());
+            auto it = j.at("layers").begin();
+            mlp.layer = it->get<Layer<INPUT,OUTPUT>>();
+            nlohmann::json newJson;
+            newJson["layers"] = nlohmann::json::array();
+            for (++it; it != j.at("layers").end(); ++it) {
+                 newJson["layers"].emplace_back(*it);
+            }
+            mlp.followingMlp = newJson.get<Mlp<OUTPUT, FOLLOWING_LAYERS...>>();
+        }
     };
 
     template<int INPUT, int OUTPUT>
@@ -120,6 +137,17 @@ namespace ml {
         const TransferF transferDiff;
         const CostF costF;
         const double learnRate;
+
+    public:
+        friend void to_json(nlohmann::json& j, const Mlp<INPUT, OUTPUT> &mlp) {
+            j["layers"].emplace_back(mlp.layer);
+        }
+
+        friend void from_json(const nlohmann::json& j, Mlp<INPUT, OUTPUT> &mlp) {
+            assert(j["layers"].size() == 1);
+            auto it = j.at("layers").begin();
+            mlp.layer = it->get<Layer<INPUT,OUTPUT>>();
+        }
     };
 }
 
