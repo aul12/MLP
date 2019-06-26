@@ -19,7 +19,7 @@ namespace ml {
         Layer() {
             std::random_device rd;  //Will be used to obtain a seed for the random number engine
             std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-            std::normal_distribution<> dis;
+            std::normal_distribution<> dis(0, 1 / std::sqrt(InputSize));
             for (auto &weight : weights) {
                 weight = dis(gen);
             }
