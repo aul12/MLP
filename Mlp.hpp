@@ -34,6 +34,7 @@ namespace ml {
         using TransferF = std::function<double(double)>;
         using CostF = std::function<double(std::array<double, LAST_OUTPUT>, std::array<double, LAST_OUTPUT>)>;
 
+        Mlp() = default;
         Mlp(const TransferF &transfer, const TransferF &transferDiff, const CostF &costF,
             double learnRate)
                 : followingMlp(transfer, transferDiff, costF, learnRate), layer{},
@@ -80,14 +81,15 @@ namespace ml {
     private:
         Mlp<OUTPUT, FOLLOWING_LAYERS...> followingMlp;
         Layer <INPUT, OUTPUT> layer;
-        const TransferF transfer;
-        const TransferF transferDiff;
-        const CostF costF;
-        const double learnRate;
+        TransferF transfer;
+        TransferF transferDiff;
+        CostF costF;
+        double learnRate;
 
     public:
         friend void to_json(nlohmann::json& j, const Mlp<INPUT, OUTPUT, FOLLOWING_LAYERS...> &mlp) {
             j["layers"].emplace_back(mlp.layer);
+            to_json(j, mlp.followingMlp); // Yes CLion is unhappy here, it doesn't understand the recursive template
         }
 
         friend void from_json(const nlohmann::json& j, Mlp<INPUT, OUTPUT, FOLLOWING_LAYERS...> &mlp) {
@@ -110,6 +112,7 @@ namespace ml {
         using TransferF = std::function<double(double)>;
         using CostF = std::function<double(std::array<double, LAST_OUTPUT>, std::array<double, LAST_OUTPUT>)>;
 
+        Mlp() = default;
         Mlp(TransferF transfer, TransferF transferDiff, const CostF &costF,
             double learnRate)
                 : layer{}, transfer(std::move(transfer)), transferDiff(std::move(transferDiff)), costF{costF},
@@ -133,10 +136,10 @@ namespace ml {
 
     private:
         Layer <INPUT, OUTPUT> layer;
-        const TransferF transfer;
-        const TransferF transferDiff;
-        const CostF costF;
-        const double learnRate;
+        TransferF transfer;
+        TransferF transferDiff;
+        CostF costF;
+        double learnRate;
 
     public:
         friend void to_json(nlohmann::json& j, const Mlp<INPUT, OUTPUT> &mlp) {

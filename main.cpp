@@ -2,6 +2,7 @@
 #include "Layer.hpp"
 #include "Mlp.hpp"
 #include "Functions.hpp"
+#include "Util.h"
 
 int main() {
     std::vector<std::array<double,2>> inputValues{{0,0}, {0,1}, {1,0}, {1,1}};
@@ -22,7 +23,6 @@ int main() {
         const auto out = mlp.forward(inputVec);
         std::cout << "[" << inputVec[0] << ", " << inputVec[1] << "] -> [" << out[0] << "," << out[1] << "]" << std::endl;
     }
-
 
     return 0;
 }

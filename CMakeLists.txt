@@ -26,4 +26,4 @@ add_library(${PROJECT_NAME} INTERFACE)
 
 # Installation via make install
 include(GNUInstallDirs)
-install(FILES Layer.hpp Mlp.hpp Functions.hpp lib/json.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mlp)
+install(FILES Layer.hpp Mlp.hpp Functions.hpp lib/json.hpp Util.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mlp)
