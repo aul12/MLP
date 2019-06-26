@@ -6,6 +6,7 @@
 #define MLP_UTIL_H
 
 #include <fstream>
+#include "Mlp.hpp"
 
 namespace ml::util {
     template <int ... LAYERS>
