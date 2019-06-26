@@ -8,7 +8,7 @@ int main() {
     std::vector<std::array<double,3>> inputValues{{0,0,0}, {0,0,1}, {0,1,0}, {0,1,1},{1,0,0}, {1,0,1}, {1,1,0}, {1,1,1}};
     std::vector<std::array<double,2>> outputValues{{0,0}, {0,1}, {0,1},{1,0},{0,1},{1,0},{1,0},{1,1}};
 
-    ml::Mlp<3,20,20,2> mlp{ml::functions::relu, ml::functions::relu, ml::functions::sigmoid};
+    ml::Mlp<3,20,20,2> mlp{ml::functions::sigmoid};
 
     auto errorCallback = [](double error) {
         std::cout << "Error: " << error << std::endl;

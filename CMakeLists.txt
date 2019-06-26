@@ -15,15 +15,26 @@ else()
 endif ()
 
 # Building
-project(Mlp)
+project(Mlp VERSION 0.0.1 DESCRIPTION "Utilities for SoPra")
 
 include_directories(lib)
 
-add_executable(MlpTest main.cpp)
-target_link_libraries(MlpTest)
+set(SOURCES ${CMAKE_SOURCE_DIR}/Functions.cpp)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_executable(MlpTest main.cpp ${SOURCES})
+target_link_libraries(MlpTest ${LIBS})
+
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
+target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 # Installation via make install
 include(GNUInstallDirs)
-install(FILES Layer.hpp Mlp.hpp Functions.hpp lib/json.hpp Util.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mlp)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION 1
+        PUBLIC_HEADER
+        "Functions.hpp;Layer.hpp;Mlp.hpp")
+install(TARGETS ${PROJECT_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mlp)
+
