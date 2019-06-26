@@ -1,5 +1,5 @@
 # MLP
-A simple header-only implementation of a Multi-Layer-Perceptron using modern C++
+A simple implementation of a Multi-Layer-Perceptron using modern C++
 
 ## Usage
 ### Prerequisites
