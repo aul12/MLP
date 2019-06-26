@@ -33,7 +33,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION 1
         PUBLIC_HEADER
-        "Functions.hpp;Layer.hpp;Mlp.hpp")
+        "Functions.hpp;Layer.hpp;Mlp.hpp;lib/json.hpp")
 install(TARGETS ${PROJECT_NAME}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mlp)
