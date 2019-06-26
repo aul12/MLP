@@ -30,7 +30,7 @@ namespace ml {
         }
 
         auto forward(const std::array<double, InputSize> &inputVec,
-                       const std::function<double(double)> &activationFunction) {
+                       const std::function<double(double)> &activationFunction) const {
             for (auto o = 0; o < OutputSize; o++) {
                 lastDendriticPotential[o] = 0;
                 for (auto i = 0; i < InputSize; i++) {
@@ -43,7 +43,7 @@ namespace ml {
         }
 
         auto backPropagate(const std::array<double, OutputSize> &errorVec,
-                           const std::function<double(double)> &transDiff) {
+                           const std::function<double(double)> &transDiff) const {
             std::array<double, InputSize> errorInPrevLayer;
             for (auto i = 0; i < InputSize; i++) {
                 errorInPrevLayer[i] = 0;
@@ -68,8 +68,8 @@ namespace ml {
     private:
         std::array<double, InputSize * OutputSize> weights;
         std::array<double, OutputSize> biases;
-        std::array<double, OutputSize> lastDendriticPotential;
-        std::array<double, OutputSize> lastOutput;
+        mutable std::array<double, OutputSize> lastDendriticPotential;
+        mutable std::array<double, OutputSize> lastOutput;
 
     public:
         friend void to_json(nlohmann::json& j, const Layer<InputSize, OutputSize> &layer) {

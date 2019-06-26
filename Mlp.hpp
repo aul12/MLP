@@ -40,7 +40,7 @@ namespace ml {
                 : followingMlp(transfer, transferDiff, costF, learnRate), layer{},
                   transfer(transfer), transferDiff(transferDiff), costF{costF}, learnRate(learnRate) {};
 
-        auto forward(const std::array<double, INPUT> &x) -> std::array<double, LAST_OUTPUT> {
+        auto forward(const std::array<double, INPUT> &x) const -> std::array<double, LAST_OUTPUT> {
             auto thisLayerResult = layer.forward(x, transfer);
             return followingMlp.forward(thisLayerResult);
         }
@@ -118,7 +118,7 @@ namespace ml {
                 : layer{}, transfer(std::move(transfer)), transferDiff(std::move(transferDiff)), costF{costF},
                   learnRate(learnRate) {};
 
-        std::array<double, OUTPUT> forward(std::array<double, INPUT> x) {
+        auto forward(std::array<double, INPUT> x) const -> std::array<double, OUTPUT> {
             return layer.forward(x, transfer);
         }
 
