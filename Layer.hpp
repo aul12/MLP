@@ -29,7 +29,7 @@ namespace ml {
             }
         }
 
-        auto propagate(const std::array<double, InputSize> &inputVec,
+        auto forward(const std::array<double, InputSize> &inputVec,
                        const std::function<double(double)> &activationFunction) {
             for (auto o = 0; o < OutputSize; o++) {
                 lastDendriticPotential[o] = 0;

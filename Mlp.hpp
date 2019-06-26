@@ -41,7 +41,7 @@ namespace ml {
                   transfer(transfer), transferDiff(transferDiff), costF{costF}, learnRate(learnRate) {};
 
         auto forward(const std::array<double, INPUT> &x) -> std::array<double, LAST_OUTPUT> {
-            auto thisLayerResult = layer.propagate(x, transfer);
+            auto thisLayerResult = layer.forward(x, transfer);
             return followingMlp.forward(thisLayerResult);
         }
 
@@ -71,7 +71,7 @@ namespace ml {
 
         auto adapt(const std::array<double, INPUT> &input,
                    const std::array<double, LAST_OUTPUT> &trainerOutput) -> std::array<double, INPUT> {
-            auto output = layer.propagate(input, transfer);
+            auto output = layer.forward(input, transfer);
             auto outputError = followingMlp.adapt(output, trainerOutput);
             auto inputError = layer.backPropagate(outputError, transferDiff);
             layer.adaptWeights(outputError, input, learnRate);
@@ -119,12 +119,12 @@ namespace ml {
                   learnRate(learnRate) {};
 
         std::array<double, OUTPUT> forward(std::array<double, INPUT> x) {
-            return layer.propagate(x, transfer);
+            return layer.forward(x, transfer);
         }
 
         auto
         adapt(std::array<double, INPUT> input, std::array<double, OUTPUT> trainerOutput) -> std::array<double, INPUT> {
-            auto mlpOutput = layer.propagate(input, transfer);
+            auto mlpOutput = layer.forward(input, transfer);
             std::array<double, OUTPUT> outputErrror;
             for (auto c = 0; c < OUTPUT; c++) {
                 outputErrror[c] = trainerOutput[c] - mlpOutput[c];
