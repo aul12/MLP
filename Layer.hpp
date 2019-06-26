@@ -10,8 +10,9 @@
 #include <tuple>
 #include <random>
 
-namespace ml {
+#include "json.hpp"
 
+namespace ml {
     template<int InputSize, int OutputSize>
     class Layer {
     public:
@@ -69,7 +70,24 @@ namespace ml {
         std::array<double, OutputSize> biases;
         std::array<double, OutputSize> lastDendriticPotential;
         std::array<double, OutputSize> lastOutput;
+
+    public:
+        friend void to_json(nlohmann::json& j, const Layer<InputSize, OutputSize> &layer) {
+            j["inputSize"] = InputSize;
+            j["outputSize"] = OutputSize;
+            j["weights"] = layer.weights;
+            j["biases"] = layer.biases;
+        }
+
+        friend void from_json(const nlohmann::json &j, Layer<InputSize, OutputSize> &layer) {
+            assert(InputSize == j.at("inputSize").get<int>());
+            assert(OutputSize == j.at("outputSize").get<int>());
+            layer.weights = j.at("weights").get<std::array<double, InputSize*OutputSize>>();
+            layer.biases = j.at("biases").get<std::array<double, OutputSize>>();
+        }
     };
+
+
 }
 
 #endif //MLPTEST_LAYER_HPP
