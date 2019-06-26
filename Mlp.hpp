@@ -1,5 +1,3 @@
-#include <utility>
-
 //
 // Created by paul on 25.05.18.
 //
@@ -38,9 +36,15 @@ namespace ml {
         using CostF = std::function<double(std::array<double, LAST_OUTPUT>, std::array<double, LAST_OUTPUT>)>;
 
         Mlp() = default;
+
         explicit Mlp(const functions::TransferFunction &transferFunction)
                 : followingMlp(transferFunction), layer{},
-                  transferFunction{transferFunction} {};
+                  transferFunction{transferFunction} {}
+
+        template <typename ... F>
+        Mlp(functions::TransferFunction transferFunction, const functions::TransferFunction& f0, F... f)
+                : followingMlp(f0, f...), layer{},
+                  transferFunction{std::move(transferFunction)} {}
 
         auto forward(const std::array<double, INPUT> &x) const -> std::array<double, LAST_OUTPUT> {
             auto thisLayerResult = layer.forward(x, transferFunction);
