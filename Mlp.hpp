@@ -102,7 +102,7 @@ namespace ml {
         }
 
         friend void from_json(const nlohmann::json& j, Mlp<INPUT, OUTPUT, FOLLOWING_LAYERS...> &mlp) {
-            assert(!j["layers"].empty());
+            assert(!j.at("layers").empty());
             auto it = j.at("layers").begin();
             mlp.layer = it->at("layer").get<Layer<INPUT,OUTPUT>>();
             nlohmann::json newJson;
@@ -158,7 +158,7 @@ namespace ml {
         }
 
         friend void from_json(const nlohmann::json& j, Mlp<INPUT, OUTPUT> &mlp) {
-            assert(j["layers"].size() == 1);
+            assert(j.at("layers").size() == 1);
             auto it = j.at("layers").begin();
             mlp.layer = it->at("layer").get<Layer<INPUT,OUTPUT>>();
             mlp.transferFunction = functions::TransferFunction::functions.at(
