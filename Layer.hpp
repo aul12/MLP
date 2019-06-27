@@ -30,11 +30,12 @@ namespace ml {
         }
 
         auto forward(const std::array<double, InputSize> &inputVec,
-                       const std::function<double(double)> &activationFunction) const {
-            for (auto o = 0; o < OutputSize; o++) {
+                       const std::function<double(double)> &activationFunction) const
+                       -> const std::array<double, OutputSize>& {
+            for (auto o = 0; o < OutputSize; ++o) {
                 lastDendriticPotential[o] = 0;
-                for (auto i = 0; i < InputSize; i++) {
-                    lastDendriticPotential[o] += inputVec[i] * weights[o * InputSize + i];
+                for (auto i = 0; i < InputSize; ++i) {
+                    lastDendriticPotential[o] += inputVec[i] * weights[i * OutputSize + o];
                 }
                 lastDendriticPotential[o] += biases[o];
                 lastOutput[o] = activationFunction(lastDendriticPotential[o]);
@@ -45,22 +46,26 @@ namespace ml {
         auto backPropagate(const std::array<double, OutputSize> &errorVec,
                            const std::function<double(double)> &transDiff) const {
             std::array<double, InputSize> errorInPrevLayer;
-            for (auto i = 0; i < InputSize; i++) {
+            for (auto i = 0; i < InputSize; ++i) {
                 errorInPrevLayer[i] = 0;
-                for (auto o = 0; o < OutputSize; o++) {
+                for (auto o = 0; o < OutputSize; ++o) {
                     errorInPrevLayer[i] +=
-                            errorVec[o] * weights[o * InputSize + i] * transDiff(lastDendriticPotential[o]);
+                            errorVec[o] * weights[i * OutputSize + o] * transDiff(lastDendriticPotential[o]);
                 }
             }
-            return errorInPrevLayer;
+            return std::move(errorInPrevLayer);
         }
 
-        auto adaptWeights(const std::array<double, OutputSize> &errorVec,
+        void adaptWeights(const std::array<double, OutputSize> &errorVec,
                           const std::array<double, InputSize> &input, double learnRate) {
-            for (auto o = 0; o < OutputSize; o++) {
-                for (auto i = 0; i < InputSize; i++) {
-                    weights[o * InputSize + i] += errorVec[o] * learnRate * input[i];
+            for (auto i = 0; i < InputSize; ++i) {
+                const auto learnRateTimesInput = learnRate * input[i];
+                for (auto o = 0; o < OutputSize; ++o) {
+                    weights[i * OutputSize + o] += errorVec[o] * learnRateTimesInput;
                 }
+            }
+
+            for (auto o = 0; o < OutputSize; ++o) {
                 biases[o] += errorVec[o] * learnRate;
             }
         }

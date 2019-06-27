@@ -47,8 +47,7 @@ namespace ml {
                   transferFunction{std::move(transferFunction)} {}
 
         auto forward(const std::array<double, INPUT> &x) const -> std::array<double, LAST_OUTPUT> {
-            auto thisLayerResult = layer.forward(x, transferFunction);
-            return followingMlp.forward(thisLayerResult);
+            return followingMlp.forward(layer.forward(x, transferFunction));
         }
 
         auto train(const std::vector<std::array<double, INPUT>> &inputs,
@@ -80,7 +79,7 @@ namespace ml {
         auto adapt(const std::array<double, INPUT> &input,
                    const std::array<double, LAST_OUTPUT> &trainerOutput,
                    double learnRate) -> std::array<double, INPUT> {
-            auto output = layer.forward(input, transferFunction);
+            const auto &output = layer.forward(input, transferFunction);
             auto outputError = followingMlp.adapt(output, trainerOutput, learnRate);
             auto inputError = layer.backPropagate(outputError, transferFunction.getDerivative());
             layer.adaptWeights(outputError, input, learnRate);
@@ -126,7 +125,7 @@ namespace ml {
 
         Mlp() = default;
         explicit Mlp(functions::TransferFunction transferFunction)
-                : layer{}, transferFunction{std::move(transferFunction)} {};
+                : layer{}, transferFunction{std::move(transferFunction)} {}
 
         auto forward(std::array<double, INPUT> x) const -> std::array<double, OUTPUT> {
             return layer.forward(x, transferFunction);

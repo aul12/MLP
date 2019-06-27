@@ -14,8 +14,8 @@ int main() {
         std::cout << "Error: " << error << std::endl;
     };
 
-    std::cout << mlp.train(inputValues, outputValues, 0.3,
-            ml::functions::meanSquareError<2>, 0.2, errorCallback) << std::endl;
+    std::cout << mlp.train(inputValues, outputValues, 0.1,
+            ml::functions::meanSquareError<2>, 0.01, errorCallback) << std::endl;
 
     for(const auto & inputVec : inputValues) {
         const auto out = mlp.forward(inputVec);
