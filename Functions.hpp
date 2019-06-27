@@ -19,17 +19,6 @@ namespace ml::functions {
         return error;
     }
 
-    namespace impl {
-        auto sigmoid(double x) -> double;
-        auto sigmoidDiff(double x) -> double;
-        auto relu(double x) -> double;
-        auto reluDiff(double x) -> double;
-        auto softplus(double x) -> double;
-        auto softplusDiff(double x) -> double;
-        auto identity(double x) -> double;
-        auto identityDiff(double) -> double;
-    }
-
     class TransferFunction {
     public:
         TransferFunction() = default;
