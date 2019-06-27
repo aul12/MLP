@@ -27,19 +27,19 @@ namespace ml::util {
     }
 
     template <int ... LAYERS>
-    void saveToFile(std::ostream &ostream, const Mlp<LAYERS...> &mlp) {
+    void saveToFile(std::ostream &ostream, const Mlp<LAYERS...> &mlp, int indent = -1) {
         nlohmann::json j = mlp;
-        ostream << j.dump(4);
+        ostream << j.dump(indent);
     }
 
     template <int ... LAYERS>
-    void saveToFile(const std::string &fname, const Mlp<LAYERS...> &mlp) {
+    void saveToFile(const std::string &fname, const Mlp<LAYERS...> &mlp, int indent = -1) {
         std::ofstream ofstream{fname};
         if (!ofstream) {
             throw std::runtime_error{"Could not open file for writing!"};
         }
 
-        saveToFile(ofstream, mlp);
+        saveToFile(ofstream, mlp, indent);
     }
 }
 
